@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - RERANKER_URL=http://reranker:8080/rerank
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - reranker
+      - redis
+
+  reranker:
+    build:
+      context: ./reranker
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - TRANSFORMERS_NO_ADVISORY=true
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]

@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+sentence-transformers==2.2.2
+torch   # leave this unpinned; if you have GPU you'd install the right cuda wheel on the host or modify Dockerfile
+requests
+pydantic
